@@ -1,18 +1,18 @@
-use strict;
-use warnings;
-
 package MasonX::Resolver::WidgetFactory;
-
-our $VERSION = '0.007';
+BEGIN {
+  $MasonX::Resolver::WidgetFactory::VERSION = '0.008';
+}
+# ABSTRACT: resolve paths to HTML::Widget::Factory plugins
 
 use Moose;
 BEGIN { extends 'HTML::Mason::Resolver' }
 
-use HTML::Widget::Factory;
+use HTML::Widget::Factory 0.067; # provides_widget
 use HTML::Mason::Tools qw(paths_eq);
 use File::Spec;
 use Storable qw(nfreeze);
 use Digest::MD5 qw(md5_hex);
+
 
 sub validation_spec {
   my $self = shift;
@@ -61,7 +61,7 @@ sub new {
   # this is terrible, but I can't see a better way to share the factory
   my $stupid_global = $self->_stupid_global;
   my $factory = $self->factory;
-  { 
+  {
     no strict 'refs';
     defined &{$stupid_global} or *{$stupid_global} = sub () { $factory };
   }
@@ -78,7 +78,7 @@ sub get_info {
   my ($self, $path, $comp_root_key, $comp_root_path) = @_;
 
   my ($widget) = $self->_matches($path) or return;
-  
+
   unless ($self->factory->provides_widget($widget)) {
     die "factory does not provide '$widget' ($path)" if $self->strict;
     return;
@@ -144,7 +144,9 @@ END
 # Resolver::File and Multiplex
 
 1;
+
 __END__
+=pod
 
 =head1 NAME
 
@@ -152,21 +154,21 @@ MasonX::Resolver::WidgetFactory - resolve paths to HTML::Widget::Factory plugins
 
 =head1 VERSION
 
-Version 0.007
+version 0.008
 
 =head1 SYNOPSIS
 
-    use MasonX::Resolver::WidgetFactory;
+  use MasonX::Resolver::WidgetFactory;
 
-    my $res = MasonX::Resolver::WidgetFactory->new(
-      factory => My::Widget::Factory->new,
-      prefix => '/widget',
-    );
+  my $res = MasonX::Resolver::WidgetFactory->new(
+    factory => My::Widget::Factory->new,
+    prefix => '/widget',
+  );
 
-    my $interp = HTML::Mason::Interp->new(
-      resolver => $res,
-      # ... other options ...
-    );
+  my $interp = HTML::Mason::Interp->new(
+    resolver => $res,
+    # ... other options ...
+  );
 
 =head1 DESCRIPTION
 
@@ -210,52 +212,14 @@ If true, it will die instead.
 
 =head1 AUTHOR
 
-Hans Dieter Pearcey, C<< <hdp at pobox.com> >>
+Hans Dieter Pearcey, <hdp at pobox.com>
 
-=head1 BUGS
+=head1 COPYRIGHT AND LICENSE
 
-Please report any bugs or feature requests to C<bug-masonx-resolver-widgetfactory at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MasonX-Resolver-WidgetFactory>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+This software is copyright (c) 2008 by Hans Dieter Pearcey.
 
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc MasonX::Resolver::WidgetFactory
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MasonX-Resolver-WidgetFactory>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/MasonX-Resolver-WidgetFactory>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/MasonX-Resolver-WidgetFactory>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/MasonX-Resolver-WidgetFactory>
-
-=back
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008 Hans Dieter Pearcey.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
