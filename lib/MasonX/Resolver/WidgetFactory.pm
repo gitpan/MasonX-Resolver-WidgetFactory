@@ -1,6 +1,6 @@
 package MasonX::Resolver::WidgetFactory;
-BEGIN {
-  $MasonX::Resolver::WidgetFactory::VERSION = '0.008';
+{
+  $MasonX::Resolver::WidgetFactory::VERSION = '0.009';
 }
 # ABSTRACT: resolve paths to HTML::Widget::Factory plugins
 
@@ -146,6 +146,7 @@ END
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -154,7 +155,7 @@ MasonX::Resolver::WidgetFactory - resolve paths to HTML::Widget::Factory plugins
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 
@@ -222,4 +223,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
